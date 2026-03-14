@@ -1,19 +1,20 @@
 const request = require('supertest');
 const { expect } = require('chai');
+require('dotenv').config();
 
 describe('Transfers', () => {
     describe('POST /transferencias', () => {
         it('Should return success 201 when transfer is equals or higher than R$ 10,00', async () => {
 
             // Get token from login
-            const responseLogin = await request('http://localhost:3000')
+            const responseLogin = await request(process.env.BASE_URL)
                 .post('/login')
                 .set('Content-Type', 'application/json')
                 .send({ 'username': 'luiz.neto', 'senha': '123456' }); //Body from Swagger
 
             const token = responseLogin.body.token;
 
-            const response = await request('http://localhost:3000')
+            const response = await request(process.env.BASE_URL)
                 .post('/transferencias')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${token}`)
@@ -30,14 +31,14 @@ describe('Transfers', () => {
         });
 
         it('Should return fail 422 when transfer is lower than R$ 10,00', async () => {
-            const responseLogin = await request('http://localhost:3000')
+            const responseLogin = await request(process.env.BASE_URL)
                 .post('/login')
                 .set('Content-Type', 'application/json')
                 .send({ 'username': 'luiz.neto', 'senha': '123456' }); //Body from Swagger
 
             const token = responseLogin.body.token;
 
-            const response = await request('http://localhost:3000')
+            const response = await request(process.env.BASE_URL)
                 .post('/transferencias')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${token}`)
